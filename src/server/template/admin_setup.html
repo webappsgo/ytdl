@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="auto">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ytdl - Setup</title>
+  <link rel="stylesheet" href="/static/css/app.css">
+  <style>
+    body { display: flex; justify-content: center; align-items: center; min-height: 100vh; }
+    .card { background: var(--bg-card); padding: 2rem; border-radius: 12px; width: 100%;
+            max-width: 500px; box-shadow: 0 8px 32px var(--shadow); }
+    h1 { text-align: center; margin-bottom: 0.5rem; color: var(--accent); }
+    p.subtitle { text-align: center; color: var(--text-secondary); margin-bottom: 1.5rem; }
+    label { display: block; margin-bottom: 0.25rem; font-size: 0.9rem; color: var(--text-secondary); }
+    input[type="text"], input[type="password"] {
+      width: 100%; padding: 0.75rem; margin-bottom: 1rem; border: 1px solid var(--border);
+      border-radius: var(--radius); background: var(--bg-input); color: var(--text-primary); font-size: 1rem; }
+    input:focus { outline: none; border-color: var(--accent); }
+    .error { color: var(--error); text-align: center; margin-bottom: 1rem; display: none; }
+    .success { background: var(--bg-input); padding: 1rem; border-radius: var(--radius); margin-top: 1rem; }
+    .token { font-family: monospace; background: var(--bg-primary); padding: 0.5rem;
+             border-radius: 4px; word-break: break-all; user-select: all; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>ytdl Setup</h1>
+    <p class="subtitle">Create your admin account</p>
+    <div class="error" id="error"></div>
+    <form id="setupForm">
+      <input type="hidden" name="csrf_token" value="{{.CSRFToken}}">
+      <label for="setup_token">Setup Token (from console)</label>
+      <input type="text" id="setup_token" name="setup_token" required placeholder="Enter setup token">
+      <label for="username">Admin Username</label>
+      <input type="text" id="username" name="username" value="administrator" required>
+      <label for="password">Admin Password</label>
+      <input type="password" id="password" name="password" required minlength="8" placeholder="Minimum 8 characters">
+      <button type="submit" class="btn btn--primary" style="width:100%;padding:0.75rem">Complete Setup</button>
+    </form>
+    <div class="success" id="result" style="display:none"></div>
+  </div>
+  <script>
+    document.getElementById('setupForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const err = document.getElementById('error');
+      err.style.display = 'none';
+      try {
+        const resp = await fetch(window.location.pathname, {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({
+            setup_token: document.getElementById('setup_token').value,
+            username: document.getElementById('username').value,
+            password: document.getElementById('password').value
+          })
+        });
+        const data = await resp.json();
+        if (resp.ok) {
+          document.getElementById('setupForm').style.display = 'none';
+          const result = document.getElementById('result');
+          result.style.display = 'block';
+          result.innerHTML = '<p>Setup complete!</p>' +
+            '<p style="margin-top:0.5rem">Your API token (save it now):</p>' +
+            '<p class="token" style="margin-top:0.5rem">' + data.data.api_token + '</p>' +
+            '<p style="margin-top:1rem"><a href="/" style="color:var(--accent)">Go to Dashboard</a></p>';
+        } else { err.textContent = data.error; err.style.display = 'block'; }
+      } catch(e) { err.textContent = 'Connection error'; err.style.display = 'block'; }
+    });
+  </script>
+</body>
+</html>

@@ -102,3 +102,32 @@ $RECYCLE.BIN/
 **/*.rewrite.sh
 **/*.refactor.sh
 
+# ============================================
+# PROJECT-SPECIFIC (add below default section)
+# ============================================
+
+# Build output
+binaries/
+releases/
+
+# Runtime volume data (NEVER commit)
+rootfs/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# AI config directories
+.claude/*
+!.claude/rules/
+!.claude/rules/*.md
+!.claude/settings.json
+.cursor/
+.aider/
+.ai/
+.windsurf/
+
+# Claude Code personal files (always gitignored)
+CLAUDE.local.md

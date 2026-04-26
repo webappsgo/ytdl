@@ -1,0 +1,17 @@
+services:
+  ytdl:
+    image: ghcr.io/casapps/ytdl:devel
+    container_name: ytdl-dev
+    hostname: ytdl-dev
+    restart: unless-stopped
+    ports:
+      - "64581:80"
+    volumes:
+      - './rootfs/config:/config:z'
+      - './rootfs/data:/data:z'
+    environment:
+      - TZ=America/New_York
+      - MODE=development
+      - DEBUG=true
+    stop_signal: SIGRTMIN+3
+    stop_grace_period: 30s

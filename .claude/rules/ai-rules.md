@@ -18,6 +18,7 @@
 ## CRITICAL - ALWAYS DO
 
 - ALWAYS read relevant PARTs before implementing
+- ALWAYS read PART 0 and PART 1 at session start
 - ALWAYS re-read spec before each task
 - ALWAYS verify every 3-5 changes against spec
 - ALWAYS read file before modifying
@@ -26,6 +27,7 @@
 - ALWAYS follow spec exactly as written
 - ALWAYS ask when uncertain (50x cheaper than guessing wrong)
 - ALWAYS use container-only development (Docker/Incus)
+- ALWAYS write `.git/COMMIT_MESS` instead of using git commit commands
 
 ## Key Rules
 
@@ -37,5 +39,7 @@
 | **Comments above** | All comments go ABOVE code, never inline |
 | **Spec is truth** | AI.md is source of truth, IDEA.md defines features |
 | **No AI attribution** | All output appears as human senior developer work |
+| **Commit workflow** | Check `git status` and `git diff`, then update `.git/COMMIT_MESS` |
+| **Session init** | Check `.claude/rules/`, update TODO.AI.md, commit COMMIT/NEVER/MUST rules to memory |
 
 For complete details, see AI.md PART 0, 1

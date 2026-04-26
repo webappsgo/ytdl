@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="auto">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Self-hosted media downloader powered by yt-dlp">
+  <meta name="theme-color" content="#0f0f1a">
+  <title>ytdl - Media Downloader</title>
+  <link rel="stylesheet" href="/static/css/app.css">
+  <link rel="manifest" href="/manifest.json">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⬇</text></svg>">
+</head>
+<body>
+  <!-- Header -->
+  <header class="header">
+    <a href="/" class="header__logo">ytdl</a>
+    <form class="header__search" id="searchForm">
+      <input type="text" id="searchInput" placeholder="Search YouTube, SoundCloud, and more..." autocomplete="off">
+      <button type="submit">Search</button>
+    </form>
+    <div class="header__actions">
+      <button class="btn btn--secondary btn--sm" id="themeToggle" title="Toggle theme">Theme</button>
+    </div>
+  </header>
+
+  <!-- Main content -->
+  <main class="main">
+    <!-- Download form -->
+    <div class="download-form">
+      <form id="downloadForm">
+        <div class="download-form__input-row">
+          <textarea class="download-form__url" id="downloadUrl" rows="1"
+                    placeholder="Paste URL(s) here - one per line for batch download"
+                    required></textarea>
+          <button type="submit" class="btn btn--primary btn--lg">Download</button>
+        </div>
+        <div class="download-form__options">
+          <select class="download-form__select" id="downloadFormat">
+            <option value="mp4">MP4 Video</option>
+            <option value="mkv">MKV Video</option>
+            <option value="webm">WebM Video</option>
+            <option value="mp3">MP3 Audio</option>
+            <option value="m4a">M4A Audio</option>
+            <option value="opus">Opus Audio</option>
+            <option value="flac">FLAC Audio</option>
+          </select>
+          <select class="download-form__select" id="downloadQuality">
+            <option value="best">Best Quality</option>
+            <option value="2160">4K (2160p)</option>
+            <option value="1080" selected>Full HD (1080p)</option>
+            <option value="720">HD (720p)</option>
+            <option value="480">SD (480p)</option>
+          </select>
+        </div>
+      </form>
+    </div>
+
+    <!-- Tabs -->
+    <div class="tabs">
+      <button class="tabs__tab tabs__tab--active" data-tab="download">Downloads</button>
+      <button class="tabs__tab" data-tab="search">Search Results</button>
+      <button class="tabs__tab" data-tab="library">Library</button>
+    </div>
+
+    <!-- Tab content: Downloads -->
+    <div class="tab-content" data-tab="download">
+      <div class="queue" id="downloadQueue">
+        <p class="text-muted text-center mt-2">No downloads yet. Paste a URL above to get started.</p>
+      </div>
+    </div>
+
+    <!-- Tab content: Search -->
+    <div class="tab-content hidden" data-tab="search">
+      <div id="searchResults">
+        <p class="text-muted text-center mt-2">Search for videos, music, and more from 1000+ sites.</p>
+      </div>
+    </div>
+
+    <!-- Tab content: Library -->
+    <div class="tab-content hidden" data-tab="library">
+      <div id="libraryGrid">
+        <p class="text-muted text-center mt-2">Loading library...</p>
+      </div>
+    </div>
+  </main>
+
+  <!-- Player bar (shown when playing media) -->
+  <div class="player" id="player">
+    <div class="player__info">
+      <div class="player__title" id="playerTitle"></div>
+    </div>
+    <div class="player__controls">
+      <audio id="audioPlayer" controls></audio>
+    </div>
+  </div>
+
+  <script src="/static/js/app.js"></script>
+</body>
+</html>

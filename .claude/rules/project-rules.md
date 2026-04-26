@@ -20,6 +20,7 @@
 - ALWAYS use CGO_ENABLED=0 (pure Go, single static binary)
 - ALWAYS use OS-specific paths (PART 4)
 - ALWAYS use server.yml for config (not .yaml)
+- ALWAYS resolve project root before path-sensitive operations
 
 ## Key Variables
 
@@ -41,6 +42,16 @@ binaries/      # Build output (gitignored)
 releases/      # Release artifacts (gitignored)
 rootfs/        # Runtime volumes (gitignored)
 ```
+
+## Key Rules
+
+| Rule | Description |
+|------|-------------|
+| **Project root** | All paths are relative to the git/project root, not the current cwd |
+| **Runtime paths** | Use OS-specific config/data/cache/log/backup paths from PART 4 |
+| **Docker paths** | `/config/**` and `/data/**` are Docker-only, not native host paths |
+| **License** | MIT only, with third-party attribution in `LICENSE.md` |
+| **Binary builds** | Single static binaries with `CGO_ENABLED=0` |
 
 ## Binary Naming
 

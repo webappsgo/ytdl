@@ -1,0 +1,50 @@
+site_name: ytdl
+site_url: https://casapps-ytdl.readthedocs.io
+site_description: Self-hosted media downloader powered by yt-dlp
+site_author: casapps
+
+repo_name: casapps/ytdl
+repo_url: https://github.com/casapps/ytdl
+
+theme:
+  name: material
+  palette:
+    - scheme: slate
+      primary: red
+      accent: red
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+    - scheme: default
+      primary: red
+      accent: red
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+  features:
+    - navigation.tabs
+    - navigation.sections
+    - navigation.expand
+    - search.suggest
+    - content.code.copy
+
+nav:
+  - Home: index.md
+  - Installation: installation.md
+  - Configuration: configuration.md
+  - API: api.md
+  - Admin: admin.md
+  - Development: development.md
+
+markdown_extensions:
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences
+  - pymdownx.tabbed:
+      alternate_style: true
+  - tables
+  - toc:
+      permalink: true
+
+extra_css:
+  - stylesheets/dark.css

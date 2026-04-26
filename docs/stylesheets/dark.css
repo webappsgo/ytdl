@@ -1,0 +1,5 @@
+/* Dark theme customization for ReadTheDocs */
+[data-md-color-scheme="slate"] {
+  --md-primary-fg-color: #e94560;
+  --md-accent-fg-color: #e94560;
+}

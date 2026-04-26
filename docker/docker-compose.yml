@@ -1,0 +1,20 @@
+services:
+  ytdl:
+    image: ghcr.io/casapps/ytdl:latest
+    container_name: ytdl
+    # Hostname for the container
+    hostname: ytdl
+    restart: unless-stopped
+    # Port mapping: external random 64xxx to internal 80
+    ports:
+      - "64580:80"
+    volumes:
+      - './rootfs/config:/config:z'
+      - './rootfs/data:/data:z'
+    environment:
+      # Default timezone
+      - TZ=America/New_York
+    # Stop signal matching Dockerfile
+    stop_signal: SIGRTMIN+3
+    # Graceful shutdown timeout
+    stop_grace_period: 30s

@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="auto">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ytdl - Admin Login</title>
+  <link rel="stylesheet" href="/static/css/app.css">
+  <style>
+    body { display: flex; justify-content: center; align-items: center; min-height: 100vh; }
+    .card { background: var(--bg-card); padding: 2rem; border-radius: 12px; width: 100%;
+            max-width: 400px; box-shadow: 0 8px 32px var(--shadow); }
+    h1 { text-align: center; margin-bottom: 1.5rem; color: var(--accent); }
+    label { display: block; margin-bottom: 0.25rem; font-size: 0.9rem; color: var(--text-secondary); }
+    input[type="text"], input[type="password"] {
+      width: 100%; padding: 0.75rem; margin-bottom: 1rem; border: 1px solid var(--border);
+      border-radius: var(--radius); background: var(--bg-input); color: var(--text-primary); font-size: 1rem; }
+    input:focus { outline: none; border-color: var(--accent); }
+    .error { color: var(--error); text-align: center; margin-bottom: 1rem; display: none; }
+    .checkbox { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1rem; }
+    .checkbox input { width: auto; margin: 0; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>ytdl</h1>
+    <div class="error" id="error"></div>
+    <form id="loginForm">
+      <input type="hidden" name="csrf_token" value="{{.CSRFToken}}">
+      <label for="username">Username</label>
+      <input type="text" id="username" name="username" required autocomplete="username">
+      <label for="password">Password</label>
+      <input type="password" id="password" name="password" required autocomplete="current-password">
+      <div class="checkbox">
+        <input type="checkbox" id="remember" name="remember">
+        <label for="remember" style="margin:0">Remember me</label>
+      </div>
+      <button type="submit" class="btn btn--primary" style="width:100%;padding:0.75rem">Login</button>
+    </form>
+  </div>
+  <script>
+    document.getElementById('loginForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const err = document.getElementById('error');
+      err.style.display = 'none';
+      try {
+        const resp = await fetch('/auth/login', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({
+            username: document.getElementById('username').value,
+            password: document.getElementById('password').value,
+            remember_me: document.getElementById('remember').checked
+          })
+        });
+        const data = await resp.json();
+        if (resp.ok) { window.location.href = data.data.redirect; }
+        else { err.textContent = data.error; err.style.display = 'block'; }
+      } catch(e) { err.textContent = 'Connection error'; err.style.display = 'block'; }
+    });
+  </script>
+</body>
+</html>

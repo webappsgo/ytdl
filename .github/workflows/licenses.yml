@@ -1,0 +1,71 @@
+name: Licenses
+
+on:
+  push:
+    branches: [main, master, beta]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  check-licenses:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: 'stable'
+
+      - name: Install go-licenses
+        env:
+          GOBIN: ${{ runner.temp }}/bin
+        run: |
+          go install github.com/google/go-licenses@latest
+
+      - name: Check licenses
+        env:
+          GOBIN: ${{ runner.temp }}/bin
+        run: |
+          export PATH="${GOBIN}:/usr/local/go/bin:/usr/bin:/bin"
+          rm -f licenses.csv licenses.stderr
+          go-licenses csv --ignore modernc.org/mathutil ./... > licenses.csv 2> licenses.stderr
+
+          if [ ! -s licenses.csv ]; then
+            echo "ERROR: go-licenses did not generate licenses.csv"
+            cat licenses.stderr
+            exit 1
+          fi
+
+          if awk -F, 'toupper($3) ~ /(^|[^A-Z])(GPL|AGPL|LGPL)([^A-Z]|$)/ { print; found=1 } END { exit found ? 0 : 1 }' licenses.csv; then
+            echo "ERROR: Copyleft license detected"
+            exit 1
+          fi
+
+          if awk -F, '($2 == "Unknown" || $3 == "Unknown") { print; found=1 } END { exit found ? 0 : 1 }' licenses.csv; then
+            echo "ERROR: Unexpected unknown license detected"
+            exit 1
+          fi
+
+          echo "INFO: modernc.org/mathutil is intentionally ignored here because go-licenses misdetects it; LICENSE.md tracks it as BSD-3-Clause after manual verification."
+
+      - name: Save license report
+        env:
+          GOBIN: ${{ runner.temp }}/bin
+        run: |
+          export PATH="${GOBIN}:/usr/local/go/bin:/usr/bin:/bin"
+          rm -rf third_party_licenses
+          go-licenses save --ignore modernc.org/mathutil ./... --save_path=third_party_licenses
+
+      - name: Upload license artifacts
+        uses: actions/upload-artifact@v5
+        with:
+          name: license-report
+          path: |
+            licenses.csv
+            licenses.stderr
+            third_party_licenses/
