@@ -44,8 +44,8 @@ https://dl.csj.rocks
 docker run -d \
   --name ytdl \
   -p 64580:80 \
-  -v ./rootfs/config:/config:z \
-  -v ./rootfs/data:/data:z \
+  -v ./volumes/config:/config:z \
+  -v ./volumes/data:/data:z \
   ghcr.io/casapps/ytdl:latest
 ```
 
